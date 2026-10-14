@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE ICT - 1.3.1 User Interfaces Quiz</title>
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-card: #131d31;
+            --border-color: #223354;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        header h1 {
+            color: var(--accent);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quiz-status {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .score-pill {
+            background-color: #0c4a6e;
+            color: #7dd3fc;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #0284c7;
+        }
+
+        .card {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            background-color: #1e293b;
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: 0.85rem;
+            border: 1px solid #334155;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #283548;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #059669 !important;
+            color: #ecfdf5 !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #7f1d1d !important;
+            border-color: #dc2626 !important;
+            color: #fee2e2 !important;
+        }
+
+        .feedback-box {
+            padding: 1.15rem;
+            border-radius: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .feedback-box.correct-feedback {
+            background-color: #022c22;
+            border: 1px solid #047857;
+            color: #a7f3d0;
+        }
+
+        .feedback-box.incorrect-feedback {
+            background-color: #450a0a;
+            border: 1px solid #b91c1c;
+            color: #fecdd3;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.85rem 1.75rem;
+            border-radius: 0.85rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .results-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .results-card h2 {
+            font-size: 2.25rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .results-card p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>IGCSE ICT Practice Quiz</h1>
+        <p>Topic 1.3.1 User Interfaces (CLI, GUI, Dialogue & Gesture-based)</p>
+    </header>
+
+    <main>
+        <div class="quiz-status">
+            <span id="question-counter">Question 1 of 30</span>
+            <span id="score-display" class="score-pill">Score: 0</span>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="card">
+            <div id="question-box" class="question-text">
+                Loading question...
+            </div>
+
+            <div id="options-container" class="options-list">
+                <!-- Options populated dynamically -->
+            </div>
+
+            <div id="feedback-box" class="feedback-box hidden">
+                <!-- Feedback populated dynamically -->
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button id="next-btn" onclick="nextQuestion()" class="btn-primary hidden">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="card results-card hidden">
+            <h2>Quiz Completed! 🎉</h2>
+            <p id="final-score">You scored X out of 30</p>
+            <button onclick="restartQuiz()" class="btn-primary">Restart Quiz</button>
+        </div>
+    </main>
+
+    <footer>
+        IGCSE ICT Revision &bull; Operating Systems & User Interfaces
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the primary role of a user interface provided by an operating system?",
+                options: [
+                    { text: "To act as an intermediary interface allowing humans to communicate with and control the computer system", isCorrect: true, rationale: "The user interface bridges the gap between the human user and computer hardware/software." },
+                    { text: "To physically convert analogue sensor signals into digital binary numbers", isCorrect: false, rationale: "Analogue-to-digital conversion is performed by an ADC." },
+                    { text: "To compile high-level programming source code into executable object code", isCorrect: false, rationale: "Code compilation is handled by a software compiler." },
+                    { text: "To supply continuous direct current electrical power to internal motherboard chips", isCorrect: false, rationale: "Electrical power is supplied by the Power Supply Unit (PSU)." }
+                ]
+            },
+            {
+                question: "Which of the following describes a Command Line Interface (CLI)?",
+                options: [
+                    { text: "An interface where the user interacts exclusively by typing text commands into a prompt using a keyboard", isCorrect: true, rationale: "CLIs require users to type specific text commands and syntax to execute operating system functions." },
+                    { text: "An interface featuring resizable windows, color icons, dropdown menus, and a pointer", isCorrect: false, rationale: "This describes a Graphical User Interface (GUI)." },
+                    { text: "An interface controlled entirely by swiping and pinching fingers on a touchscreen", isCorrect: false, rationale: "This describes a gesture-based touch interface." },
+                    { text: "An interface that responds to spoken human voice commands", isCorrect: false, rationale: "This describes a dialogue-based speech interface." }
+                ]
+            },
+            {
+                question: "What does the acronym WIMP stand for in the context of Graphical User Interfaces?",
+                options: [
+                    { text: "Wireless, Internet, Mobile, Protocols", isCorrect: false, rationale: "This is incorrect networking terminology." },
+                    { text: "Windows, Icons, Menus, Pointer", isCorrect: true, rationale: "WIMP stands for Windows, Icons, Menus, and Pointer, which form the core elements of a GUI." },
+                    { text: "Web Interface Management Program", isCorrect: false, rationale: "This is incorrect." },
+                    { text: "Writable Internal Memory Partition", isCorrect: false, rationale: "This is incorrect." }
+                ]
+            },
+            {
+                question: "What is a major advantage of using a Command Line Interface (CLI) for an experienced system administrator?",
+                options: [
+                    { text: "It is much more colorful and beginner-friendly than a GUI.", isCorrect: false, rationale: "CLIs are text-only and lack graphical color aids for beginners." },
+                    { text: "It requires high memory and processing resources to display graphics.", isCorrect: false, rationale: "CLIs use very low memory and resources." },
+                    { text: "It allows fast and direct execution of complex commands and scripts without navigating menus", isCorrect: true, rationale: "Experts can execute repetitive or administrative tasks much faster using typed scripts in a CLI." },
+                    { text: "It uses a mouse pointer to drag files into folders easily.", isCorrect: false, rationale: "CLIs do not use mice or visual drag-and-drop actions." }
+                ]
+            },
+            {
+                question: "What is a primary disadvantage of a Command Line Interface (CLI) for novice users?",
+                options: [
+                    { text: "It requires users to memorize exact syntax and typed commands, making it prone to errors", isCorrect: true, rationale: "Typos or incorrect command syntax will cause errors or fail to execute, making it unintuitive for beginners." },
+                    { text: "It consumes too much RAM and GPU resources.", isCorrect: false, rationale: "CLIs are extremely lightweight on system resources." },
+                    { text: "It requires a touch-sensitive screen and accelerometer.", isCorrect: false, rationale: "CLIs operate with a standard keyboard and text monitor." },
+                    { text: "It cannot be accessed on server computers.", isCorrect: false, rationale: "Servers frequently use CLI for remote administration." }
+                ]
+            },
+            {
+                question: "Which type of user interface uses graphical symbols to represent applications, folders, and files?",
+                options: [
+                    { text: "Command Line Interface (CLI)", isCorrect: false, rationale: "CLIs display text only, with no graphical icons." },
+                    { text: "Graphical User Interface (GUI)", isCorrect: true, rationale: "GUIs use icons, windows, menus, and pointers to represent files and programs visually." },
+                    { text: "Dialogue-based interface", isCorrect: false, rationale: "Dialogue interfaces rely on spoken or text conversation." },
+                    { text: "ASCII text interface", isCorrect: false, rationale: "ASCII text is used in text terminals." }
+                ]
+            },
+            {
+                question: "Why does a Graphical User Interface (GUI) require more computer hardware resources (RAM and CPU processing power) than a CLI?",
+                options: [
+                    { text: "Because rendering windows, icons, graphical animations, and pointers requires significant processing power and memory", isCorrect: true, rationale: "Managing graphical displays and multi-window environments demands much higher system resources." },
+                    { text: "Because GUIs must translate high-level programming code into machine code constantly.", isCorrect: false, rationale: "Code translation is done by compilers, not user interfaces." },
+                    { text: "Because GUIs require continuous analogue-to-digital sensor conversion.", isCorrect: false, rationale: "Sensors are unrelated to GUI resource consumption." },
+                    { text: "Because text commands use more memory than graphic pixels.", isCorrect: false, rationale: "Text uses vastly less memory than graphics." }
+                ]
+            },
+            {
+                question: "Which of the following is a key advantage of a Graphical User Interface (GUI) over a CLI?",
+                options: [
+                    { text: "It is intuitive and user-friendly, making it ideal for beginners without training", isCorrect: true, rationale: "GUIs require no command memorization, making them accessible to everyday users." },
+                    { text: "It executes batch scripting commands faster than any other interface.", isCorrect: false, rationale: "CLI scripts are often faster for batch operations." },
+                    { text: "It operates on zero RAM and battery power.", isCorrect: false, rationale: "GUIs are resource-intensive." },
+                    { text: "It restricts users from opening more than one window at a time.", isCorrect: false, rationale: "GUIs excel at multi-window multi-tasking." }
+                ]
+            },
+            {
+                question: "What is a dialogue-based (or speech-based) user interface?",
+                options: [
+                    { text: "An interface where the user interacts with the computer using spoken voice commands and receives spoken or audio feedback", isCorrect: true, rationale: "Dialogue interfaces use natural language speech recognition, like smart speakers or phone assistants." },
+                    { text: "An interface that requires typing long MS-DOS text commands.", isCorrect: false, rationale: "This is a CLI." },
+                    { text: "An interface controlled by waving hands in front of a camera", isCorrect: false, rationale: "This describes a gesture-based interface." },
+                    { text: "An interface based on desktop WIMP windows.", isCorrect: false, rationale: "This is a GUI." }
+                ]
+            },
+            {
+                question: "Which of the following is a real-world example of a dialogue-based user interface?",
+                options: [
+                    { text: "A smart home speaker like Amazon Alexa or Apple Siri", isCorrect: true, rationale: "Smart speakers operate primarily through spoken dialogue and voice recognition." },
+                    { text: "A desktop command prompt terminal window", isCorrect: false, rationale: "A command prompt is a CLI." },
+                    { text: "A supermarket barcode checkout scanner", isCorrect: false, rationale: "A barcode scanner is a direct data entry input device." },
+                    { text: "A mechanical typewriter", isCorrect: false, rationale: "A typewriter is not a computer interface." }
+                ]
+            },
+            {
+                question: "What is a gesture-based user interface?",
+                options: [
+                    { text: "An interface where the user controls the system using physical body movements, hand gestures, or touch actions like swiping and pinching", isCorrect: true, rationale: "Gesture interfaces rely on motion tracking, cameras, or touchscreens to interpret physical movements." },
+                    { text: "An interface controlled solely by typing C++ programming code", isCorrect: false, rationale: "This is code writing." },
+                    { text: "An interface using physical buttons on a standard QWERTY keyboard", isCorrect: false, rationale: "Keyboards are manual text input devices." },
+                    { text: "An interface using printed text menus on paper", isCorrect: false, rationale: "This is physical media." }
+                ]
+            },
+            {
+                question: "Which of the following is a common example of a gesture-based interaction on a smartphone?",
+                options: [
+                    { text: "Pinching two fingers together on the screen to zoom out on a map", isCorrect: true, rationale: "Pinching and swiping are standard touch gestures on mobile devices." },
+                    { text: "Typing an MS-DOS directory command", isCorrect: false, rationale: "This is a CLI command." },
+                    { text: "Speaking a weather query into a microphone", isCorrect: false, rationale: "This is a dialogue/speech interface." },
+                    { text: "Clicking a mouse pointer on a desktop minimize button", isCorrect: false, rationale: "This is a GUI WIMP action." }
+                ]
+            },
+            {
+                question: "What is a primary advantage of dialogue-based interfaces?",
+                options: [
+                    { text: "They allow hands-free and eyes-free operation, making them convenient when driving or busy", isCorrect: true, rationale: "Voice interfaces enable natural spoken interaction without needing to look at or touch a screen." },
+                    { text: "They process graphics faster than dedicated GPU hardware.", isCorrect: false, rationale: "Speech interfaces do not render graphics." },
+                    { text: "They require zero electrical power to process sound waves.", isCorrect: false, rationale: "Voice processing requires active computing power." },
+                    { text: "They completely eliminate the need for an operating system.", isCorrect: false, rationale: "An OS is still required to manage underlying tasks." }
+                ]
+            },
+            {
+                question: "What is a major limitation or disadvantage of dialogue-based (speech) interfaces?",
+                options: [
+                    { text: "They can struggle to understand accents, background noise, or complex commands accurately", isCorrect: true, rationale: "Speech recognition software can misinterpret words due to background noise, accents, or unclear phrasing." },
+                    { text: "They require the user to wear a physical computer mouse.", isCorrect: false, rationale: "Mice are not used with voice interfaces." },
+                    { text: "They can only display text in black and white.", isCorrect: false, rationale: "Voice interfaces often have no visual screen at all." },
+                    { text: "They are too fast for human ears to comprehend.", isCorrect: false, rationale: "Speed is not the primary drawback." }
+                ]
+            },
+            {
+                question: "Why are gesture-based touch interfaces particularly essential for modern smartphones and tablets?",
+                options: [
+                    { text: "Because mobile devices lack physical space for a mouse or full keyboard, making touch gestures intuitive for portable navigation", isCorrect: true, rationale: "Touchscreens and gestures provide a natural, compact way to interact with portable mobile devices." },
+                    { text: "Because mobile operating systems cannot process text characters.", isCorrect: false, rationale: "Mobile devices process text constantly." },
+                    { text: "Because gesture interfaces require zero battery power.", isCorrect: false, rationale: "Touchscreens consume significant battery power." },
+                    { text: "Because physical keyboards are illegal on mobile phones.", isCorrect: false, rationale: "This is incorrect." }
+                ]
+            },
+            {
+                question: "Which user interface type would be most appropriate for a network administrator performing complex bulk file reconfigurations and server scripts?",
+                options: [
+                    { text: "Command Line Interface (CLI)", isCorrect: true, rationale: "Administrators prefer CLI for its speed, precision, and script automation capabilities." },
+                    { text: "Dialogue-based speech interface", isCorrect: false, rationale: "Speaking complex server file paths would be extremely inefficient and error-prone." },
+                    { text: "Gesture-based touch interface", isCorrect: false, rationale: "Touch gestures are poorly suited for complex administrative server scripts." },
+                    { text: "Simple menu-driven ATM interface", isCorrect: false, rationale: "ATM menus are far too limited for server administration." }
+                ]
+            },
+            {
+                question: "Which user interface type is typically used in public Automated Teller Machines (ATMs) and ticket vending kiosks?",
+                options: [
+                    { text: "Menu-driven interface (or touch-screen GUI)", isCorrect: true, rationale: "ATMs use structured menu options or touchscreen buttons to guide users safely through simple transactions." },
+                    { text: "A raw Command Line Interface terminal", isCorrect: false, rationale: "Public users do not type CLI commands at an ATM." },
+                    { text: "A VR motion-sensor gesture interface", isCorrect: false, rationale: "VR motion sensors are not used for ATMs." },
+                    { text: "A developer compiler suite", isCorrect: false, rationale: "Compilers are for programming." }
+                ]
+            },
+            {
+                question: "What is a menu-driven interface characterized by?",
+                options: [
+                    { text: "Presenting the user with a list of options from which to make a selection, often leading to sub-menus", isCorrect: true, rationale: "Menu-driven systems guide users step-by-step through numbered or clickable choices." },
+                    { text: "Requiring the user to memorize and type complex lines of programming code", isCorrect: false, rationale: "Typing code describes a CLI." },
+                    { text: "Using freehand drawing tools and 3D vector graphics", isCorrect: false, rationale: "This describes CAD software." },
+                    { text: "Interpreting continuous physical hand waves in open air", isCorrect: false, rationale: "This describes gesture control." }
+                ]
+            },
+            {
+                question: "What is a major advantage of a menu-driven interface over a CLI for general public users?",
+                options: [
+                    { text: "Users do not need to memorize commands; they simply choose from visible options", isCorrect: true, rationale: "Menus remove the need for command memorization, making them beginner-friendly." },
+                    { text: "Menus execute batch script files faster than any other system.", isCorrect: false, rationale: "CLIs are faster for batch scripts." },
+                    { text: "Menus use zero RAM memory.", isCorrect: false, rationale: "Menus require graphical rendering memory." },
+                    { text: "Menus allow users to draw custom vector graphics.", isCorrect: false, rationale: "Drawing is done in graphic editors." }
+                ]
+            },
+            {
+                question: "What is a disadvantage of a deeply nested menu-driven interface?",
+                options: [
+                    { text: "It can frustrate users if they have to click through too many layers of menus to find a simple option", isCorrect: true, rationale: "Deep menu structures slow down navigation and can annoy users looking for quick settings." },
+                    { text: "It crashes the computer's CPU clock instantly.", isCorrect: false, rationale: "Menus do not affect CPU clock speed." },
+                    { text: "It requires the user to type command-line syntax.", isCorrect: false, rationale: "Menus use selection, not typing." },
+                    { text: "It cannot be displayed on LCD screens.", isCorrect: false, rationale: "Screens display menus easily." }
+                ]
+            },
+            {
+                question: "Which of the following best describes how a user interacts with a GUI window?",
+                options: [
+                    { text: "By clicking or tapping on window title bars, close buttons, and scroll bars using a pointer or finger", isCorrect: true, rationale: "GUI windows can be moved, resized, minimized, and closed using WIMP controls." },
+                    { text: "By speaking natural voice sentences into an external microphone", isCorrect: false, rationale: "Voice interaction is dialogue-based." },
+                    { text: "By typing 'RUN WINDOW.EXE' at a blinking text cursor", isCorrect: false, rationale: "This is a CLI command." },
+                    { text: "By waving both hands in front of an infrared depth camera", isCorrect: false, rationale: "This is gesture-based." }
+                ]
+            },
+            {
+                question: "What is the function of 'icons' in a Graphical User Interface?",
+                options: [
+                    { text: "To provide small visual graphical pictures that represent programs, files, or shortcuts", isCorrect: true, rationale: "Icons act as visual shortcuts that users click or tap to open applications or documents." },
+                    { text: "To translate high-level source code into binary machine code", isCorrect: false, rationale: "Code translation is handled by compilers." },
+                    { text: "To measure physical room temperature in a greenhouse", isCorrect: false, rationale: "Temperature measurement is done by sensors." },
+                    { text: "To amplify audio speaker volume", isCorrect: false, rationale: "Audio volume is controlled by sound hardware." }
+                ]
+            },
+            {
+                question: "What is the function of 'menus' in a Graphical User Interface?",
+                    options: [
+                    { text: "To provide lists of commands or options (like File, Edit, View) from which the user can choose", isCorrect: true, rationale: "Menus organize available software commands and settings neatly into dropdown lists." },
+                    { text: "To physically connect expansion cards to the motherboard", isCorrect: false, rationale: "Expansion connection is done via motherboard slots." },
+                    { text: "To store permanent BIOS startup instructions", isCorrect: false, rationale: "BIOS is stored in ROM." },
+                    { text: "To cool down the CPU processor chip", isCorrect: false, rationale: "Cooling is done by heatsinks and fans." }
+                ]
+            },
+            {
+                question: "What is the role of the 'pointer' in a WIMP-based Graphical User Interface?",
+                options: [
+                    { text: "To allow the user to navigate the screen, select icons, highlight text, and click menu items using a mouse or trackpad", isCorrect: true, rationale: "The pointer gives the user visual control to select and interact with GUI elements." },
+                    { text: "To convert analogue sensor inputs into digital binary data", isCorrect: false, rationale: "Analogue conversion is performed by an ADC." },
+                    { text: "To link separate compiled object modules into an executable file", isCorrect: false, rationale: "Code linking is done by a linker." },
+                    { text: "To print multi-part carbon-copy invoices", isCorrect: false, rationale: "Printing is done by printers." }
+                ]
+            },
+            {
+                question: "Why might a factory embedded system controlling an industrial machine use a CLI or simple menu interface rather than a resource-heavy GUI?",
+                options: [
+                    { text: "Embedded systems often have limited processing power, memory, and screen space, making lightweight interfaces more reliable and efficient", isCorrect: true, rationale: "Industrial microcontrollers and embedded systems benefit from fast, low-overhead interfaces without graphical bloat." },
+                    { text: "Because industrial workers are forbidden from looking at color graphics.", isCorrect: false, rationale: "This is incorrect." },
+                    { text: "Because GUIs cannot operate when connected to electricity.", isCorrect: false, rationale: "GUIs require electrical power just like any interface." },
+                    { text: "Because industrial machines require voice recognition exclusively.", isCorrect: false, rationale: "Factories are often too noisy for reliable voice recognition." }
+                ]
+            },
+            {
+                question: "Which interface type would be best suited for a visually impaired user navigating a computer or smartphone?",
+                options: [
+                    { text: "Dialogue-based (speech) interface combined with screen-reader audio feedback", isCorrect: true, rationale: "Speech and audio dialogue interfaces provide critical accessibility for users with visual impairments." },
+                    { text: "A text-only CLI terminal with no sound output", isCorrect: false, rationale: "A silent text CLI is difficult for visually impaired users." },
+                    { text: "A high-resolution graphical CAD drawing suite", isCorrect: false, rationale: "CAD relies heavily on visual drawing." },
+                    { text: "A purely gesture-based motion camera without audio", isCorrect: false, rationale: "Motion gestures still require visual confirmation." }
+                ]
+            },
+            {
+                question: "How do operating system user interfaces handle multi-tasking in modern computing?",
+                options: [
+                    { text: "GUIs allow multiple application windows to be open simultaneously, letting users switch between them easily", isCorrect: true, rationale: "GUIs support multi-window management so users can view and work across multiple apps at the same time." },
+                    { text: "CLIs prevent any other program from running while one is open.", isCorrect: false, rationale: "Modern CLIs also support background multi-tasking via scripts." },
+                    { text: "Dialogue interfaces automatically close all apps when you stop speaking.", isCorrect: false, rationale: "This does not occur." },
+                    { text: "Menu-driven systems restrict the computer to one calculation per day.", isCorrect: false, rationale: "This is incorrect." }
+                ]
+            },
+            {
+                question: "Which of the following statements correctly contrasts CLI and GUI regarding learning curve?",
+                options: [
+                    { text: "CLI has a steep learning curve requiring command knowledge, whereas GUI has a shallow learning curve making it easy for beginners", isCorrect: true, rationale: "Beginners can use a GUI instantly without training, whereas a CLI requires learning syntax rules." },
+                    { text: "CLI is extremely easy for toddlers, while GUI is only for expert computer scientists.", isCorrect: false, rationale: "This is completely reversed." },
+                    { text: "CLI and GUI have identical learning curves and requirements.", isCorrect: false, rationale: "Their learning curves differ significantly." },
+                    { text: "Neither interface requires any learning.", isCorrect: false, rationale: "CLI requires command memorization." }
+                ]
+            },
+            {
+                question: "What is a key security risk or disadvantage associated with using a CLI improperly?",
+                options: [
+                    { text: "Typing a single incorrect command (such as an errant file deletion command) can accidentally wipe critical system files instantly", isCorrect: true, rationale: "Direct system control in a CLI means mistakes can have immediate, catastrophic consequences." },
+                    { text: "It causes the computer screen to overheat and melt plastic casing.", isCorrect: false, rationale: "CLIs do not generate physical heat." },
+                    { text: "It prevents antivirus software from ever running.", isCorrect: false, rationale: "Antivirus software can run via CLI or GUI." },
+                    { text: "It automatically connects the computer to public unsecured Wi-Fi.", isCorrect: false, rationale: "Network connection requires explicit configuration." }
+                ]
+            },
+            {
+                question: "Which summary best explains why operating systems offer multiple types of user interfaces?",
+                options: [
+                    { text: "Different devices, user expertise levels, and tasks require different interfaces (e.g., smartphones need touch gestures, servers need CLI speed, and beginners need GUIs)", isCorrect: true, rationale: "Different contexts demand tailored interfaces to balance ease of use, speed, hardware resources, and accessibility." },
+                    { text: "Because software developers enjoy writing extra code for fun.", isCorrect: false, rationale: "Interfaces are chosen based on functional requirements." },
+                    { text: "Because hardware manufacturers force users to buy new mice every year.", isCorrect: false, rationale: "This is incorrect." },
+                    { text: "To ensure computers never connect to the internet.", isCorrect: false, rationale: "Interfaces are unrelated to internet connectivity." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionCounter = document.getElementById("question-counter");
+        const scoreDisplay = document.getElementById("score-display");
+        const questionBox = document.getElementById("question-box");
+        const optionsContainer = document.getElementById("options-container");
+        const feedbackBox = document.getElementById("feedback-box");
+        const nextBtn = document.getElementById("next-btn");
+        const quizContainer = document.getElementById("quiz-container");
+        const resultsContainer = document.getElementById("results-container");
+        const finalScore = document.getElementById("final-score");
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add("hidden");
+            nextBtn.classList.add("hidden");
+
+            const q = questions[currentQuestionIndex];
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            scoreDisplay.textContent = `Score: ${score}`;
+            questionBox.textContent = q.question;
+
+            optionsContainer.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = opt.text;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestionIndex];
+            const allOptionButtons = optionsContainer.children;
+
+            q.options.forEach((opt, idx) => {
+                allOptionButtons[idx].disabled = true;
+                if (opt.isCorrect) {
+                    allOptionButtons[idx].classList.add("correct");
+                } else if (idx === selectedIndex) {
+                    allOptionButtons[idx].classList.add("incorrect");
+                }
+            });
+
+            const selectedOpt = q.options[selectedIndex];
+            feedbackBox.classList.remove("hidden");
+            if (selectedOpt.isCorrect) {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+                feedbackBox.className = "feedback-box correct-feedback";
+                feedbackBox.innerHTML = `<strong>Correct!</strong> ${selectedOpt.rationale}`;
+            } else {
+                feedbackBox.className = "feedback-box incorrect-feedback";
+                feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${selectedOpt.rationale}`;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.textContent = "Next Question";
+            } else {
+                nextBtn.textContent = "View Results";
+            }
+            nextBtn.classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                quizContainer.classList.add("hidden");
+                resultsContainer.classList.remove("hidden");
+                finalScore.textContent = `You scored ${score} out of ${questions.length}`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultsContainer.classList.add("hidden");
+            quizContainer.classList.remove("hidden");
+            loadQuestion();
+        }
+
+        // Initialize quiz on load
+        loadQuestion();
+    </script>
+</body>
+</html>
